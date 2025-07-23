@@ -41,6 +41,9 @@ class LdapAuthenticationProvider extends UserAuthenticationProvider
         $this->ldapManager = $ldapManager;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function retrieveUser($username, UsernamePasswordToken $token)
     {
         $user = $token->getUser();
@@ -62,6 +65,9 @@ class LdapAuthenticationProvider extends UserAuthenticationProvider
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
         $currentUser = $token->getUser();

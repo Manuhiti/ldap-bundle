@@ -9,12 +9,12 @@ interface LdapUserInterface
      *
      * @param string $dn Distinguished Name
      */
-    public function setDn(string $dn);
+    public function setDn($dn);
 
     /**
      * Get Ldap Distinguished Name.
      *
-     * @return string|null Distinguished Name
+     * @return null|string Distinguished Name
      */
-    public function getDn(): ?string;
+    public function getDn();
 }

@@ -30,7 +30,7 @@ class ZendLdapDriver implements LdapDriverInterface
 
     /**
      * @param Ldap            $driver Initialized Zend::Ldap Object
-     * @param LoggerInterface $logger optional logger for write debug messages
+     * @param LoggerInterface $logger Optional logger for write debug messages.
      */
     public function __construct(Ldap $driver, LoggerInterface $logger = null)
     {
@@ -38,7 +38,10 @@ class ZendLdapDriver implements LdapDriverInterface
         $this->logger = $logger;
     }
 
-    public function search(string $baseDn, string $filter, array $attributes = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function search($baseDn, $filter, array $attributes = [])
     {
         $this->logDebug('{action}({base_dn}, {filter}, {attributes})', [
             'action' => 'ldap_search',
@@ -61,7 +64,10 @@ class ZendLdapDriver implements LdapDriverInterface
         return $entries;
     }
 
-    public function bind(UserInterface $user, string $password): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function bind(UserInterface $user, $password)
     {
         if ($user instanceof LdapUserInterface && $user->getDn()) {
             $bind_rdn = $user->getDn();
@@ -76,7 +82,7 @@ class ZendLdapDriver implements LdapDriverInterface
             ]);
             $bind = $this->driver->bind($bind_rdn, $password);
 
-            return $bind instanceof Ldap;
+            return ($bind instanceof Ldap);
         } catch (ZendLdapException $exception) {
             $this->zendExceptionHandler($exception, $password);
         }
@@ -86,8 +92,11 @@ class ZendLdapDriver implements LdapDriverInterface
 
     /**
      * Treat a Zend Ldap Exception.
+     *
+     * @param ZendLdapException $exception
+     * @param string $password
      */
-    protected function zendExceptionHandler(ZendLdapException $exception, string $password = null): void
+    protected function zendExceptionHandler(ZendLdapException $exception, $password = null)
     {
         $sanitizedException = null !== $password ? new SanitizingException($exception, $password) : $exception;
 
@@ -108,8 +117,11 @@ class ZendLdapDriver implements LdapDriverInterface
 
     /**
      * Log debug messages if the logger is set.
+     *
+     * @param string $message
+     * @param array $context
      */
-    private function logDebug(string $message, array $context = []): void
+    private function logDebug($message, array $context = [])
     {
         if ($this->logger) {
             $this->logger->debug($message, $context);

@@ -4,27 +4,29 @@ namespace FR3D\LdapBundle\Tests\Driver;
 
 use FR3D\LdapBundle\Driver\LdapDriverInterface;
 use FR3D\LdapBundle\Model\LdapUserInterface;
-use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\MockObject\MockObject;
+use Maks3w\PhpUnitMethodsTrait\Framework\TestCaseTrait;
+use PHPUnit_Framework_Assert as Assert;
+use PHPUnit_Framework_TestCase as TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
-use FR3D\LdapBundle\Tests\TestUser;
 
 /**
  * Common test methods for any FR3D\LdapBundle\Driver\LdapDriverInterface implementation.
  */
 trait LdapDriverInterfaceTestTrait
 {
+    use TestCaseTrait;
+
     /**
      * @var LdapDriverInterface
      */
     protected $driver;
 
-    public function testImplementsHydratorInterface(): void
+    public function testImplementsHydratorInterface()
     {
         Assert::assertInstanceOf(LdapDriverInterface::class, $this->driver);
     }
 
-    public function validUserPasswordProvider(): array
+    public function validUserPasswordProvider()
     {
         $goodDn = 'uid=test_username,ou=example,dc=com';
         $goodPassword = 'password';
@@ -37,7 +39,7 @@ trait LdapDriverInterfaceTestTrait
         ];
     }
 
-    public function invalidUserPasswordProvider(): array
+    public function invalidUserPasswordProvider()
     {
         $goodUsername = 'test_username';
         $wrongUsername = 'bad_username';
@@ -57,15 +59,20 @@ trait LdapDriverInterfaceTestTrait
         ];
     }
 
-    private function mockUserInterface(array $methodReturns): UserInterface
+    /**
+     * @param array $methodReturns
+     *
+     * @return UserInterface
+     */
+    private function mockUserInterface(array $methodReturns)
     {
-        /** @var UserInterface|MockObject $user */
-        $user = $this->createMock(UserInterface::class);
+        /** @var UserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
 
         foreach ($methodReturns as $method => $return) {
-            $user
+            $user->expects(TestCase::any())
                 ->method($method)
-                ->willReturn($return)
+                ->will(TestCase::returnValue($return))
             ;
         }
 
@@ -73,17 +80,19 @@ trait LdapDriverInterfaceTestTrait
     }
 
     /**
+     * @param array $methodReturns
+     *
      * @return UserInterface|LdapUserInterface
      */
     private function mockLdapUserInterface(array $methodReturns)
     {
-        /** @var UserInterface|LdapUserInterface|MockObject $user */
-        $user = $this->createMock(TestUser::class);
+        /** @var UserInterface|LdapUserInterface|\PHPUnit_Framework_MockObject_MockObject $user */
+        $user = $this->getMock('FR3D\LdapBundle\Tests\TestUser');
 
         foreach ($methodReturns as $method => $return) {
-            $user
+            $user->expects(TestCase::any())
                 ->method($method)
-                ->willReturn($return)
+                ->will(TestCase::returnValue($return))
             ;
         }
 

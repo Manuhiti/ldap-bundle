@@ -12,15 +12,15 @@ trait HydrateWithMapTrait
     /**
      * Fill the given user with the following the attribute-method map.
      *
-     * @param UserInterface $user               target user
-     * @param array[]       $ldapUserAttributes raw LDAP data
-     * @param string[]      $attributeMap       attribute-method map
+     * @param UserInterface $user Target user.
+     * @param array[] $ldapUserAttributes Raw LDAP data.
+     * @param string[] $attributeMap Attribute-method map.
      */
     protected function hydrateUserWithAttributesMap(
         UserInterface $user,
         array $ldapUserAttributes,
         array $attributeMap
-    ): void {
+    ) {
         foreach ($attributeMap as $attr) {
             if (!array_key_exists($attr['ldap_attr'], $ldapUserAttributes)) {
                 continue;
@@ -32,13 +32,13 @@ trait HydrateWithMapTrait
                 unset($ldapValue['count']);
             }
 
-            if (1 === count($ldapValue)) {
+            if (count($ldapValue) === 1) {
                 $value = array_shift($ldapValue);
             } else {
                 $value = $ldapValue;
             }
 
-            $user->{$attr['user_method']}($value);
+            call_user_func([$user, $attr['user_method']], $value);
         }
     }
 }

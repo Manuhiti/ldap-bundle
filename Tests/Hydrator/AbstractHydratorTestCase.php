@@ -3,9 +3,8 @@
 namespace FR3D\LdapBundle\Tests\Hydrator;
 
 use FR3D\LdapBundle\Tests\DependencyInjection\ConfigurationTrait;
-use PHPUnit\Framework\TestCase;
 
-abstract class AbstractHydratorTestCase extends TestCase
+abstract class AbstractHydratorTestCase extends \PHPUnit_Framework_TestCase
 {
     use ConfigurationTrait {
         getDefaultUserConfig as parentGetDefaultUserConfig;
@@ -16,8 +15,10 @@ abstract class AbstractHydratorTestCase extends TestCase
      * Returns default configuration for User subtree.
      *
      * Same as service parameter `fr3d_ldap.ldap_manager.parameters`
+     *
+     * @return array
      */
-    protected function getDefaultUserConfig(): array
+    protected function getDefaultUserConfig()
     {
         $config = $this->parentGetDefaultUserConfig();
         $config['attributes'][] = [

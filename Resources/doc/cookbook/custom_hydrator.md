@@ -60,8 +60,10 @@ class UserHydrator implements HydratorInterface
      *
      * @param array $ldapEntry LDAP result information as a multi-dimensional array.
      *              see {@link http://www.php.net/function.ldap-get-entries.php} for array format examples.
+     *
+     * @return UserInterface
      */
-    public function hydrate(array $ldapEntry): UserInterface
+    public function hydrate(array $ldapEntry)
     {
         $user = new \Acme\DemoBundle\Entity\User();
         $user->setUsername($ldapEntry['uid'][0]);
